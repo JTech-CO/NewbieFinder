@@ -1,0 +1,57 @@
+{
+  "name": "newbie-finder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "치지직에서 시청자와 팔로워가 적은 현재 라이브를 조건별로 찾습니다.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite",
+    "clean": "node scripts/clean-dist.mjs dist release",
+    "build": "tsc --noEmit -p tsconfig.json && node scripts/clean-dist.mjs dist && vite build && node scripts/copy-manifest.mjs",
+    "build:only": "node scripts/clean-dist.mjs dist && vite build && node scripts/copy-manifest.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"scripts/**/*.mjs\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "contract:live": "node --experimental-strip-types scripts/contract-check.mts",
+    "validate:manifest": "node scripts/validate-manifest.mjs",
+    "package": "node scripts/package-extension.mjs",
+    "release": "npm run lint && npm run typecheck && npm run test && npm run build && npm run validate:manifest && npm run package"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/chrome": "^0.0.301",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.18.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "jsdom": "^26.0.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vite": "^6.0.7",
+    "vitest": "^3.0.2"
+  }
+}
