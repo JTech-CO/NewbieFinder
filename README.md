@@ -6,7 +6,7 @@
 
 치지직의 기본 탐색 화면은 인기 방송과 추천 방송을 중심으로 구성됩니다. 그래서 시청자와 팔로워가 적은 스트리머는 아무리 방송을 켜도 눈에 띄기 어렵습니다. NewbieFinder는 치지직이 공개한 라이브 정보를 읽기 전용으로 훑어, 사용자가 정한 시청자 수·팔로워 수 상한을 만족하는 방송만 따로 모아 보여 줍니다.
 
-로그인하지 않아도 동작합니다. 네이버 계정, 로그인 쿠키, 액세스 토큰을 요구하지 않고, 별도의 서버 없이 브라우저 안에서만 처리합니다.
+로그인하지 않아도 동작합니다. 네이버 계정, 로그인 쿠키, 액세스 토큰을 요구하지 않고, 별도의 서버 없이 브라우저 안에서만 처리합니다. 자세한 소개는 [제품 페이지](https://jtech-co.github.io/NewbieFinder/docs/index.html)에 있습니다.
 
 **주요 기능**
 
@@ -36,6 +36,8 @@
 1. **설치 (Install)**
 
    ```bash
+   git clone https://github.com/jtech-co/NewbieFinder.git
+   cd NewbieFinder
    npm ci
    ```
 
@@ -55,14 +57,14 @@
 **그 밖의 명령어**
 
 ```bash
-npm run dev              # Vite 개발 서버 (UI 확인용)
-npm run lint             # ESLint
-npm run typecheck        # TypeScript 타입 검사
-npm test                 # 유닛·통합 테스트 (Vitest)
-npm run test:e2e         # 확장을 실제로 로드하는 E2E (Playwright, 빌드 후 실행)
+npm run dev               # Vite 개발 서버 (UI 확인용)
+npm run lint              # ESLint
+npm run typecheck         # TypeScript 타입 검사
+npm test                  # 유닛·통합 테스트 (Vitest)
+npm run test:e2e          # 확장을 실제로 로드하는 E2E (Playwright, 빌드 후 실행)
 npm run validate:manifest # 권한·CSP·번들 정책 검증
-npm run package          # release/ 에 배포용 ZIP 생성
-npm run contract:live    # 실제 API 계약 점검 (수동 실행 전용)
+npm run package           # release/ 에 배포용 ZIP 생성
+npm run contract:live     # 실제 API 계약 점검 (수동 실행 전용)
 ```
 
 ## 4. 폴더 구조 (Structure)
@@ -80,46 +82,39 @@ src/
 └── shared/         # 상수, URL 검증, 공용 타입
 ```
 
-계층 의존 방향은 `finder → application → domain ← infrastructure` 입니다. `domain`은 Chrome API, React, 네트워크 구현을 알지 못합니다. 자세한 설계 배경은 [ARCHITECTURE.md](docs/reference/ARCHITECTURE.md)에 있습니다.
+계층 의존 방향은 `finder → application → domain ← infrastructure` 입니다. `domain`은 Chrome API, React, 네트워크 구현을 알지 못합니다.
 
-저장소 전체 구조는 다음과 같습니다.
+그 밖의 최상위 폴더는 다음과 같습니다.
 
 ```text
-NewbieFinder/
-├── src/            # 확장 소스
-├── public/         # manifest.json, 아이콘, 대체 이미지
-├── tests/          # unit · integration · e2e · fixtures
-├── scripts/        # 빌드·검증·패키징·아이콘 생성
-├── docs/           # GitHub Pages 로 게시하는 소개 사이트
-│   ├── assets/     # 사이트 CSS
-│   └── reference/  # 마크다운 원본 문서
-└── store/          # Chrome 웹 스토어 제출 자료
+public/   # manifest.json, 아이콘, 대체 이미지
+tests/    # unit · integration · e2e · fixtures
+scripts/  # 빌드·검증·패키징·아이콘 생성
+docs/     # 공개 페이지(HTML)와 마크다운 원본(reference/)
 ```
 
 ## 5. 정보 (Info)
 
 - **License**: MIT ([LICENSE](LICENSE))
-- **개인정보**: [PRIVACY.md](docs/reference/PRIVACY.md): 수집·저장·보존 범위
-- **권한 설명**: [PERMISSIONS.md](docs/reference/PERMISSIONS.md)
-- **QA 체크리스트**: [QA_CHECKLIST.md](docs/reference/QA_CHECKLIST.md)
+- **Contact**: [GitHub Issues](https://github.com/jtech-co/NewbieFinder/issues)
 - **변경 이력**: [CHANGELOG.md](CHANGELOG.md)
 
-**소개 페이지 (GitHub Pages)**
+**공개 페이지**
 
-`docs/` 안에 정적 페이지가 함께 있습니다. 저장소 설정에서 **Pages → Deploy from a branch → main / docs** 를 선택하면 그대로 게시됩니다. 외부 리소스를 불러오지 않으며 빌드 단계도 필요 없습니다.
+| 페이지 | 주소 |
+|---|---|
+| 제품 소개 | <https://jtech-co.github.io/NewbieFinder/docs/index.html> |
+| 개인정보 처리방침 | <https://jtech-co.github.io/NewbieFinder/docs/privacy.html> |
+| 권한 설명 | <https://jtech-co.github.io/NewbieFinder/docs/permissions.html> |
+| 아키텍처 | <https://jtech-co.github.io/NewbieFinder/docs/architecture.html> |
+| 데이터 계약 위험 | <https://jtech-co.github.io/NewbieFinder/docs/contract-risk.html> |
 
-| 파일 | 게시 주소 | 용도 |
-|---|---|---|
-| [docs/index.html](docs/index.html) | `/` | 제품 소개 |
-| [docs/privacy.html](docs/privacy.html) | `/privacy.html` | 개인정보 처리방침 (Chrome 웹 스토어 등록에 필요한 공개 URL) |
-| [docs/permissions.html](docs/permissions.html) | `/permissions.html` | 권한 설명 |
-| [docs/architecture.html](docs/architecture.html) | `/architecture.html` | 아키텍처 |
-| [docs/contract-risk.html](docs/contract-risk.html) | `/contract-risk.html` | 데이터 계약 위험 |
+저장소 설정에서 **Pages → Deploy from a branch → main / (root)** 를 선택하면 위 주소로 게시됩니다. 저장소 최상위의 `.nojekyll` 은 Pages 가 저장소 전체를 Jekyll 로 처리하다 실패하는 것을 막는 빈 파일이므로 지우지 마세요.
 
-각 `.html` 은 `docs/reference/` 안의 같은 문서와 내용이 같습니다. 마크다운은 저장소에서 읽기 위한 것이고 HTML 은 게시용입니다. **한쪽을 고치면 다른 쪽도 함께 고쳐야 합니다.**
+각 페이지는 [docs/reference/](docs/reference/) 안의 같은 문서와 내용이 같으며, **한쪽을 고치면 다른 쪽도 함께 고쳐야 합니다.**
 
 **데이터 소스에 관한 고지**
 
-NewbieFinder는 치지직 웹 클라이언트가 사용하는 공개 응답을 읽습니다. 공식 Open API가 아니므로 사전 공지 없이 형식이 바뀌거나 중단될 수 있습니다. 그런 경우 확장은 잘못된 결과를 보여 주는 대신 오류 상태로 멈춥니다. 접근이 제한되면 우회하지 않습니다. 관련 위험과 대응은 [CONTRACT_RISK.md](docs/reference/CONTRACT_RISK.md)에 정리했습니다.
+NewbieFinder는 치지직 웹 클라이언트가 사용하는 공개 응답을 읽습니다. 공식 Open API가 아니므로 사전 공지 없이 형식이 바뀌거나 중단될 수 있습니다. 그런 경우 확장은 잘못된 결과를 보여 주는 대신 오류 상태로 멈추며, 접근이 제한되면 우회하지 않습니다. 관련 위험과 대응은 [CONTRACT_RISK.md](docs/reference/CONTRACT_RISK.md)에 정리했습니다.
 
 **NewbieFinder는 NAVER 또는 CHZZK의 공식 서비스가 아닌 독립적인 브라우저 확장 프로그램입니다.**
