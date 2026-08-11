@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>개인정보 처리방침 | NewbieFinder</title>
+    <meta
+      name="description"
+      content="NewbieFinder는 개인정보를 수집하지 않습니다. 저장하는 값은 사용자가 직접 설정한 필터 조건과 짧은 기간의 공개 라이브 캐시뿐이며 모두 사용자의 브라우저 안에만 있습니다."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23000'/%3E%3Cg fill='none' stroke='%2300FFA3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M11.8 17.3A5.3 5.3 0 1 1 16.5 14.8'/%3E%3Cpath d='M11.7 21.1A9.1 9.1 0 1 1 19.7 16.8'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='2' fill='%2300FFA3'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./assets/site.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" rx="4" fill="#000" />
+            <g fill="none" stroke="#00FFA3" stroke-width="2" stroke-linecap="round">
+              <path d="M11.8 17.3A5.3 5.3 0 1 1 16.5 14.8" />
+              <path d="M11.7 21.1A9.1 9.1 0 1 1 19.7 16.8" />
+            </g>
+            <circle cx="12" cy="12" r="2" fill="#00FFA3" />
+          </svg>
+          <strong>NewbieFinder</strong>
+          <span>개인정보 처리방침</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <h1>개인정보 처리방침</h1>
+        <p class="meta">
+          대상 제품: NewbieFinder v1.0.0 (Chrome 확장 프로그램, Manifest V3)<br />
+          최종 갱신일: 2026년 8월 11일
+        </p>
+        <p>
+          NewbieFinder는 치지직에서 현재 라이브 중인 소규모 방송을 찾기 위한 확장 프로그램입니다. 이
+          문서는 확장이 무엇을 저장하고, 어디에 저장하며, 언제 지우는지를 설명합니다.
+        </p>
+
+        <div class="summary" style="margin-top: 28px">
+          <p>
+            <strong>요약</strong>: NewbieFinder는 개인정보를 수집하지 않습니다. 저장하는 값은
+            사용자가 직접 설정한 필터 조건과 짧은 기간의 공개 라이브 캐시뿐이며, 모두 사용자의
+            브라우저 안에만 있습니다. 외부로 전송하는 데이터가 없습니다.
+          </p>
+        </div>
+
+        <nav class="toc" style="margin-top: 28px" aria-label="목차">
+          <ol>
+            <li><a href="#scope">처리 범위 한눈에 보기</a></li>
+            <li><a href="#collect">수집하는 것</a></li>
+            <li><a href="#not-collect">수집하지 않는 것</a></li>
+            <li><a href="#where">저장 위치</a></li>
+            <li><a href="#retention">보존 기간과 삭제</a></li>
+            <li><a href="#third-party">제3자 전송</a></li>
+            <li><a href="#children">아동 개인정보</a></li>
+            <li><a href="#changes">방침 변경</a></li>
+            <li><a href="#contact">문의</a></li>
+          </ol>
+        </nav>
+      </div>
+
+      <section id="scope">
+        <div class="wrap">
+          <h2>1. 처리 범위 한눈에 보기</h2>
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">데이터</th>
+                  <th scope="col">수집 여부</th>
+                  <th scope="col">저장 위치</th>
+                  <th scope="col">보존 기간</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>필터 설정 (시청자·팔로워 상한, 정렬, 조건 활성화 여부)</td>
+                  <td>수집</td>
+                  <td><code>chrome.storage.sync</code></td>
+                  <td>사용자가 확장을 제거할 때까지</td>
+                </tr>
+                <tr>
+                  <td>
+                    라이브 공개 정보 (방송 제목, 시청자 수, 시작 시각, 썸네일 URL, 채널명·채널 ID)
+                  </td>
+                  <td>임시 수집</td>
+                  <td><code>chrome.storage.local</code></td>
+                  <td>TTL 이후 교체, 최대 24시간 이내 정리</td>
+                </tr>
+                <tr>
+                  <td>팔로워 수 공개 정보</td>
+                  <td>임시 수집</td>
+                  <td><code>chrome.storage.local</code></td>
+                  <td>기본 15분 TTL</td>
+                </tr>
+                <tr>
+                  <td>새로고침 쿨다운·요청 잠금 상태</td>
+                  <td>임시 수집</td>
+                  <td><code>chrome.storage.session</code></td>
+                  <td>브라우저를 닫으면 사라집니다</td>
+                </tr>
+                <tr>
+                  <td>화면 안내 닫힘 여부</td>
+                  <td>수집</td>
+                  <td><code>chrome.storage.local</code></td>
+                  <td>사용자가 확장을 제거할 때까지</td>
+                </tr>
+                <tr>
+                  <td>네이버 계정 정보</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+                <tr>
+                  <td>로그인 쿠키·세션 (<code>NID_AUT</code>, <code>NID_SES</code> 등)</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+                <tr>
+                  <td>방문 기록·탭 목록</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+                <tr>
+                  <td>사용 분석·통계·이벤트 로그</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+                <tr>
+                  <td>IP 주소·기기 식별자·브라우저 지문</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+                <tr>
+                  <td>결제 정보</td>
+                  <td>수집하지 않음</td>
+                  <td>해당 없음</td>
+                  <td>해당 없음</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="collect">
+        <div class="wrap">
+          <h2>2. 수집하는 것</h2>
+
+          <h3>2.1. 필터 설정</h3>
+          <p>사용자가 탐색 화면에서 직접 설정한 값입니다.</p>
+          <ul class="plain">
+            <li>시청자 수 조건 활성화 여부와 상한 (1~30)</li>
+            <li>팔로워 수 조건 활성화 여부와 상한 (1~100)</li>
+            <li>최근 시작 순 정렬 사용 여부</li>
+            <li>테마 값 (v1은 다크 고정)</li>
+          </ul>
+          <p style="margin-top: 16px">
+            <code>chrome.storage.sync</code> 에 저장하므로, 같은 Google 계정으로 Chrome 동기화를
+            사용 중이라면 다른 기기에도 설정이 함께 반영될 수 있습니다. 동기화되는 값은 위의 숫자와
+            참/거짓 값뿐이며 방송 목록이나 개인 식별 정보는 포함되지 않습니다.
+          </p>
+
+          <h3>2.2. 공개 라이브·채널 정보 캐시</h3>
+          <p>
+            같은 방송 목록을 짧은 시간 안에 반복해서 요청하지 않기 위한 임시 캐시입니다. 치지직이
+            누구에게나 공개하는 값만 담습니다.
+          </p>
+          <ul class="plain">
+            <li>방송 제목, 현재 시청자 수, 방송 시작 시각, 썸네일 URL, 카테고리명</li>
+            <li>채널명, 채널 ID, 채널 이미지 URL, 인증 표시 여부</li>
+            <li>채널별 팔로워 수</li>
+          </ul>
+
+          <h3>2.3. 세션 상태</h3>
+          <p>
+            새로고침 쿨다운과 중복 요청 방지를 위한 값입니다. 브라우저를 닫으면 사라집니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="not-collect">
+        <div class="wrap">
+          <h2>3. 수집하지 않는 것</h2>
+          <ul class="plain">
+            <li>
+              <strong>네이버 계정 정보와 로그인 상태</strong>를 읽지 않습니다. 확장은 로그인 여부와
+              무관하게 동작합니다.
+            </li>
+            <li>
+              <strong>쿠키를 읽지 않습니다.</strong> <code>cookies</code> 권한을 요청하지 않으며,
+              모든 API 요청은 <code>credentials: "omit"</code> 으로 보내 인증 정보가 실리지 않도록
+              명시합니다.
+            </li>
+            <li>
+              <strong>브라우저 방문 기록과 탭 내용을 읽지 않습니다.</strong> <code>history</code>,
+              <code>tabs</code>, <code>activeTab</code> 권한을 사용하지 않고 콘텐츠 스크립트도
+              없습니다. 치지직 페이지의 DOM에 접근하지 않습니다.
+            </li>
+            <li>
+              <strong>사용 분석·광고·오류 수집 SDK를 넣지 않습니다.</strong> Google Analytics,
+              Sentry 같은 외부 telemetry가 없습니다.
+            </li>
+            <li>어떤 형태의 프로파일링이나 개인화 추천도 하지 않습니다.</li>
+            <li>
+              개발 모드 디버그 로그에도 원시 응답 전체, 요청 헤더, 쿠키, IP, 방문 기록을 남기지
+              않습니다.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="where">
+        <div class="wrap">
+          <h2>4. 저장 위치</h2>
+          <p>모든 데이터는 <strong>사용자의 로컬 브라우저 저장소</strong>에만 있습니다.</p>
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">저장소</th>
+                  <th scope="col">담는 값</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>chrome.storage.sync</code></td>
+                  <td>필터 설정 (Chrome 동기화 정책을 따릅니다)</td>
+                </tr>
+                <tr>
+                  <td><code>chrome.storage.local</code></td>
+                  <td>라이브·채널 캐시, 마지막 갱신 시각, 안내 닫힘 여부</td>
+                </tr>
+                <tr>
+                  <td><code>chrome.storage.session</code></td>
+                  <td>새로고침 쿨다운, 요청 잠금</td>
+                </tr>
+                <tr>
+                  <td>브라우저 HTTP 캐시</td>
+                  <td>썸네일 이미지 (확장이 별도로 이미지를 내려받아 보관하지 않습니다)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top: 20px">
+            NewbieFinder는 자체 서버, 서버리스 프록시, 데이터베이스를 운영하지 않습니다. IndexedDB는
+            v1에서 사용하지 않습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="retention">
+        <div class="wrap">
+          <h2>5. 보존 기간과 삭제</h2>
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">데이터</th>
+                  <th scope="col">보존 규칙</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>라이브 캐시</td>
+                  <td>신선 45초, 이후 5분까지 오래된 데이터로만 사용하고 그 뒤 폐기</td>
+                </tr>
+                <tr>
+                  <td>채널(팔로워) 캐시</td>
+                  <td>신선 15분, 이후 24시간까지 오래된 데이터로만 사용하고 그 뒤 폐기</td>
+                </tr>
+                <tr>
+                  <td>필터 설정</td>
+                  <td>사용자가 변경하거나 확장을 제거할 때까지</td>
+                </tr>
+                <tr>
+                  <td>세션 상태</td>
+                  <td>브라우저 종료 시 삭제</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top: 20px">
+            캐시 총량에도 상한을 두어(채널 2,000건, 라이브 후보 1,500건) 오래된 항목부터 정리합니다.
+            <code>unlimitedStorage</code> 권한을 요청하지 않습니다.
+          </p>
+
+          <h3>확장을 제거하면</h3>
+          <p>
+            <code>chrome://extensions</code> 에서 NewbieFinder를 삭제하면
+            <code>chrome.storage.sync</code>, <code>chrome.storage.local</code>,
+            <code>chrome.storage.session</code> 에 저장된 값이
+            <strong>Chrome에 의해 함께 삭제됩니다.</strong> 확장이 브라우저 밖에 남기는 데이터는
+            없으므로 별도로 지워야 할 파일이나 계정이 없습니다.
+          </p>
+          <p>
+            설정만 초기화하고 싶다면 확장을 삭제하지 않고 탐색 화면에서 조건을 기본값(시청자 조건
+            켜짐 / 상한 10명)으로 되돌리면 됩니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="third-party">
+        <div class="wrap">
+          <h2>6. 제3자 전송</h2>
+          <div class="summary">
+            <p>
+              <strong>NewbieFinder는 어떤 데이터도 제3자에게 전송하거나 판매하지 않습니다.</strong>
+            </p>
+          </div>
+          <p style="margin-top: 24px">확장이 네트워크 요청을 보내는 대상은 다음 한 곳뿐입니다.</p>
+          <pre><code>https://api.chzzk.naver.com/*</code></pre>
+          <p style="margin-top: 20px">
+            이 요청은 <strong>읽기 전용</strong>이며, 현재 라이브 목록과 채널의 공개 정보를 가져오기
+            위한 GET 요청입니다. 사용자의 설정값이나 개인 식별 정보를 이 요청에 실어 보내지
+            않습니다.
+          </p>
+          <ul class="plain">
+            <li>쿠키와 <code>Authorization</code> 헤더를 설정하지 않습니다.</li>
+            <li><code>User-Agent</code>, <code>Origin</code>, <code>Referer</code> 를 위장하지 않습니다.</li>
+            <li>
+              예상하지 않은 다른 호스트로의 리다이렉트를 따르지 않습니다
+              (<code>redirect: "error"</code>).
+            </li>
+            <li>
+              요청은 사용자가 탐색 화면을 열거나 새로고침 버튼을 눌렀을 때만 발생합니다. 주기적인
+              백그라운드 수집이 없습니다.
+            </li>
+          </ul>
+          <p style="margin-top: 20px">
+            썸네일 이미지는 브라우저가 <code>*.pstatic.net</code>, <code>*.akamaized.net</code> 에서
+            직접 불러옵니다. 이 과정은 일반 웹 페이지에서 이미지를 볼 때와 같으며, 확장이 이미지를
+            내려받아 보관하지 않습니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="children">
+        <div class="wrap">
+          <h2>7. 아동 개인정보</h2>
+          <p>
+            NewbieFinder는 계정을 만들지 않고 개인정보를 수집하지 않으므로 연령 정보를 수집하거나
+            저장하지 않습니다. 성인 방송은 v1 결과에서 제외합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="changes">
+        <div class="wrap">
+          <h2>8. 방침 변경</h2>
+          <p>
+            이 방침이 바뀌면 변경 이력에 내용을 기록하고 이 문서의 최종 갱신일을 수정합니다. 수집
+            범위가 늘어나는 변경은 확장 버전의 Major 또는 Minor 증가와 함께 안내합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="contact">
+        <div class="wrap">
+          <h2>9. 문의</h2>
+          <ul class="plain">
+            <li>이 확장은 JTech에서 만든 독립 프로젝트입니다.</li>
+            <li>
+              개인정보 처리와 관련한 문의, 오탐 신고, 삭제 요청은 배포처의 이슈 트래커 또는 배포
+              페이지에 안내된 연락처로 보내 주세요.
+            </li>
+            <li>
+              실제 저장된 값은 <code>chrome://extensions</code> 에서 NewbieFinder의
+              <strong>서비스 워커</strong> 콘솔을 열어
+              <code>chrome.storage.local.get(null)</code> 등으로 직접 확인하실 수 있습니다.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="affiliation">
+        <div class="wrap">
+          <h2>10. 비제휴 고지</h2>
+          <div class="note">
+            <strong
+              >NewbieFinder는 NAVER 또는 CHZZK의 공식 서비스가 아닌 독립적인 브라우저 확장
+              프로그램입니다.</strong
+            >
+            <p style="margin: 8px 0 0">
+              이 확장이 읽는 데이터는 치지직 웹 클라이언트가 사용하는 비공식 응답이며, NAVER 또는
+              CHZZK가 호환성을 보증하는 공식 계약이 아닙니다.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav>
+          <a href="./index.html">소개</a>
+          <a href="./permissions.html">권한 설명</a>
+          <a href="./architecture.html">아키텍처</a>
+          <a href="./contract-risk.html">데이터 계약 위험</a>
+        </nav>
+        <p>NewbieFinder v1.0.0 · MIT License · © 2026 JTech</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+{
+  "code": 200,
+  "message": null,
+  "content": {
+    "size": 50,
+    "page": {
+      "next": {
+        "concurrentUserCount": 7,
+        "liveId": 20476565
+      },
+      "prev": null
+    },
+    "data": [
+      {
+        "liveId": 20476569,
+        "liveTitle": "첫 방송입니다 잘 부탁드려요",
+        "liveImageUrl": "https://livecloud-thumb.akamaized.net/chzzk/livecloud/example-a/thumbnail/image_{type}.jpg",
+        "defaultThumbnailImageUrl": null,
+        "concurrentUserCount": 3,
+        "openDate": "2026-08-11 00:11:17",
+        "adult": false,
+        "categoryType": "GAME",
+        "liveCategory": "EXAMPLE_GAME_A",
+        "liveCategoryValue": "테스트 게임 A",
+        "channel": {
+          "channelId": "a1b2c3d4e5f60718293a4b5c6d7e8f90",
+          "channelName": "채널A",
+          "channelImageUrl": "",
+          "verifiedMark": false
+        }
+      },
+      {
+        "liveId": 20476512,
+        "liveTitle": "오늘도 조용히 게임합니다",
+        "liveImageUrl": null,
+        "defaultThumbnailImageUrl": "https://ssl.pstatic.net/example/default_thumbnail_480.jpg",
+        "concurrentUserCount": 12,
+        "openDate": "2026-08-10 22:45:00",
+        "adult": false,
+        "categoryType": "GAME",
+        "liveCategory": "EXAMPLE_GAME_B",
+        "liveCategoryValue": "테스트 게임 B",
+        "channel": {
+          "channelId": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+          "channelName": "채널B",
+          "channelImageUrl": "https://nng-phinf.pstatic.net/example/profile_b.jpg",
+          "verifiedMark": false
+        }
+      },
+      {
+        "liveId": 20476488,
+        "liveTitle": "심야 잡담 방송",
+        "liveImageUrl": "https://livecloud-thumb.akamaized.net/chzzk/livecloud/example-c/thumbnail/image_{type}.jpg",
+        "defaultThumbnailImageUrl": null,
+        "concurrentUserCount": 26,
+        "openDate": "2026-08-10 19:02:33",
+        "adult": true,
+        "categoryType": null,
+        "liveCategory": null,
+        "liveCategoryValue": null,
+        "channel": {
+          "channelId": "112233445566778899aabbccddeeff00",
+          "channelName": "채널C",
+          "channelImageUrl": null,
+          "verifiedMark": true
+        }
+      }
+    ]
+  }
+}

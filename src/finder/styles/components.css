@@ -1,0 +1,1323 @@
+/*
+ * 규칙
+ * - Accent 는 Primary Button, 활성 Switch, Slider Fill, Focus Ring, 핵심 숫자에만 쓴다.
+ * - Glow 는 Focus Ring 이외에 사용하지 않는다.
+ * - 점멸 Border, 무한 Pulse 장식, 배경 Particle, 카드 Tilt 를 쓰지 않는다.
+ * - 상태를 색만으로 전달하지 않는다. 아이콘·텍스트·경계선 형태를 함께 쓴다.
+ */
+
+/* ====================================================================== */
+/* 공통 유틸                                                              */
+/* ====================================================================== */
+
+.nf-icon {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nf-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--nf-stack-gap, var(--space-3));
+  min-inline-size: 0;
+}
+
+.nf-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--nf-cluster-gap, var(--space-2));
+  min-inline-size: 0;
+}
+
+/** 시청자·팔로워 같은 핵심 숫자. */
+.nf-metric {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  font-size: var(--font-size-metric);
+  line-height: var(--line-height-metric);
+  font-weight: var(--font-weight-metric);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-1);
+}
+
+/* ====================================================================== */
+/* Status Badge                                                           */
+/* ====================================================================== */
+
+.nf-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-badge);
+  padding-block: 3px;
+  padding-inline: 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-badge);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-2);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-panel) var(--easing-panel),
+    border-color var(--duration-panel) var(--easing-panel),
+    color var(--duration-panel) var(--easing-panel);
+}
+
+.nf-badge__dot {
+  flex: none;
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/** LIVE 만 대문자로 쓴다. 점멸시키지 않는다. */
+.nf-badge--live {
+  border-color: var(--color-live-line);
+  background-color: var(--color-live-soft);
+  color: var(--color-live);
+  letter-spacing: 0.04em;
+}
+
+.nf-badge--ready {
+  border-color: var(--color-accent-line);
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* 부분 결과·이전 데이터는 파선으로 "완전하지 않음"을 형태로 알린다. */
+.nf-badge--partial,
+.nf-badge--stale {
+  border-style: dashed;
+  border-color: var(--color-warning-line);
+  background-color: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.nf-badge--error {
+  border-width: 2px;
+  border-color: var(--color-error-line);
+  background-color: var(--color-error-soft);
+  color: var(--color-error);
+}
+
+.nf-badge--info {
+  border-color: var(--color-info-line);
+  background-color: var(--color-info-soft);
+  color: var(--color-info);
+}
+
+.nf-badge--cached {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-surface-3);
+  color: var(--color-text-2);
+}
+
+/* ====================================================================== */
+/* Button                                                                 */
+/* ====================================================================== */
+
+.nf-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: 36px;
+  padding-block: 0;
+  padding-inline: 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-1);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-hover) var(--easing-hover),
+    border-color var(--duration-hover) var(--easing-hover),
+    color var(--duration-hover) var(--easing-hover);
+}
+
+.nf-button .nf-icon {
+  inline-size: 16px;
+  block-size: 16px;
+}
+
+.nf-button:hover:not(:disabled) {
+  background-color: var(--color-surface-3);
+  border-color: var(--color-text-3);
+}
+
+.nf-button:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+.nf-button:disabled {
+  opacity: 0.55;
+}
+
+.nf-button--primary {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.nf-button--primary:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: var(--color-on-accent);
+}
+
+.nf-button--ghost {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--color-text-2);
+}
+
+.nf-button--ghost:hover:not(:disabled) {
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border);
+  color: var(--color-text-1);
+}
+
+.nf-button--icon {
+  inline-size: 36px;
+  min-inline-size: 36px;
+  padding-inline: 0;
+}
+
+/** 요청 중 느린 회전. 장식 목적으로는 쓰지 않는다. */
+.nf-button__spinner {
+  flex: none;
+  inline-size: 14px;
+  block-size: 14px;
+  border: 2px solid currentColor;
+  border-block-start-color: transparent;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: nf-spin 1400ms linear infinite;
+}
+
+@keyframes nf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ====================================================================== */
+/* Panel                                                                  */
+/* ====================================================================== */
+
+.nf-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-1);
+  box-shadow: var(--shadow-panel);
+}
+
+.nf-panel__title {
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-h2);
+  color: var(--color-text-1);
+}
+
+.nf-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.nf-panel__summary {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-1);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.nf-panel__help {
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border);
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+/* ====================================================================== */
+/* Filter Control                                                         */
+/* ====================================================================== */
+
+.nf-filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+  transition: border-color var(--duration-hover) var(--easing-hover);
+}
+
+.nf-filter:hover {
+  border-color: var(--color-border-strong);
+}
+
+/*
+ * OFF 상태에서도 마지막 값을 그대로 보여 준다.
+ * 색만으로 비활성을 전달하지 않도록 경계선을 파선으로 바꾼다.
+ */
+.nf-filter--disabled {
+  border-style: dashed;
+  background-color: var(--color-surface-1);
+}
+
+/* 값을 잃지 않는다는 것과, 지금 적용되고 있다는 것은 다르다. */
+.nf-filter--disabled .nf-filter__control,
+.nf-filter--disabled .nf-filter__bounds {
+  opacity: 0.62;
+}
+
+/* 꺼진 조건의 Fill 은 컴포넌트가 0% 로 넘긴다. Accent 가 남아 있으면 적용 중처럼 보인다. */
+.nf-filter--disabled .nf-range {
+  opacity: 0.5;
+}
+
+.nf-filter--disabled .nf-filter__label {
+  color: var(--color-text-2);
+}
+
+.nf-filter__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.nf-filter__label {
+  min-inline-size: 0;
+  color: var(--color-text-1);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+}
+
+.nf-filter__control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: opacity var(--duration-panel) var(--easing-panel);
+}
+
+.nf-filter__value {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-badge);
+  margin-inline-start: auto;
+}
+
+.nf-filter__unit {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  white-space: nowrap;
+}
+
+.nf-filter__bounds {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.nf-filter__bound {
+  color: var(--color-text-3);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====================================================================== */
+/* Toggle Switch: 40x22, Thumb 18, 140ms                                 */
+/* ====================================================================== */
+
+.nf-switch {
+  position: relative;
+  flex: none;
+  inline-size: 40px;
+  block-size: 22px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-3);
+  transition:
+    background-color var(--duration-toggle) var(--easing-toggle),
+    border-color var(--duration-toggle) var(--easing-toggle);
+}
+
+.nf-switch:hover:not(:disabled):not(.nf-switch--disabled) {
+  border-color: var(--color-text-3);
+}
+
+.nf-switch:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+/*
+ * 잠긴 스위치. 네이티브 disabled 대신 aria-disabled 를 쓰므로
+ * 두 경우를 모두 같은 모양으로 처리한다. 옆의 자물쇠 아이콘과 안내 문구가
+ * 색 이외의 단서를 함께 제공한다.
+ */
+.nf-switch:disabled,
+.nf-switch--disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.nf-switch__thumb {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-text-2);
+  transform: translate(1px, -50%);
+  transition:
+    transform var(--duration-toggle) var(--easing-toggle),
+    background-color var(--duration-toggle) var(--easing-toggle);
+}
+
+.nf-switch--on {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+}
+
+.nf-switch--on:hover:not(:disabled) {
+  border-color: var(--color-accent-hover);
+  background-color: var(--color-accent-hover);
+}
+
+.nf-switch--on .nf-switch__thumb {
+  background-color: var(--color-on-accent);
+  transform: translate(19px, -50%);
+}
+
+/* ====================================================================== */
+/* Number Input                                                           */
+/* ====================================================================== */
+
+.nf-number {
+  inline-size: 72px; /* 3자리 값에서도 잘리지 않는 폭 */
+  min-block-size: 36px;
+  padding-block: 0;
+  padding-inline: 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-1);
+  color: var(--color-text-1);
+  font-size: var(--font-size-metric);
+  line-height: var(--line-height-metric);
+  font-weight: var(--font-weight-metric);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  appearance: textfield;
+  transition:
+    border-color var(--duration-hover) var(--easing-hover),
+    background-color var(--duration-hover) var(--easing-hover);
+}
+
+/* Spinner 는 감추되 키보드 Arrow 증감은 그대로 둔다. */
+.nf-number::-webkit-outer-spin-button,
+.nf-number::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.nf-number:hover:not(:disabled) {
+  border-color: var(--color-text-3);
+}
+
+.nf-number:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: var(--focus-ring);
+}
+
+.nf-number:disabled {
+  color: var(--color-text-3);
+  border-color: var(--color-border);
+}
+
+/* ====================================================================== */
+/* Range Slider: Track 4px, Thumb 18px, Click Target 32px                */
+/*                                                                        */
+/* Fill 비율은 컴포넌트가 `--nf-range-fill` 로 넘긴다.                     */
+/* 예: style={{ "--nf-range-fill": "42%" }}                               */
+/* 값이 없으면 전체를 Inactive Track 으로 그린다.                          */
+/* ====================================================================== */
+
+.nf-range {
+  inline-size: 100%;
+  block-size: 32px;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  appearance: none;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.nf-range::-webkit-slider-runnable-track {
+  block-size: 4px;
+  border-radius: var(--radius-pill);
+  background-image: linear-gradient(
+    to right,
+    var(--color-accent) 0 var(--nf-range-fill, 0%),
+    var(--color-border-strong) var(--nf-range-fill, 0%) 100%
+  );
+}
+
+.nf-range::-webkit-slider-thumb {
+  inline-size: 18px;
+  block-size: 18px;
+  margin-block-start: -7px;
+  border: 0;
+  /* 동그란 손잡이 대신 모서리만 다듬은 사각형. 화면 전체의 모서리 언어와 맞춘다. */
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent);
+  appearance: none;
+  transition: background-color var(--duration-hover) var(--easing-hover);
+}
+
+.nf-range::-moz-range-track {
+  block-size: 4px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-border-strong);
+}
+
+.nf-range::-moz-range-progress {
+  block-size: 4px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+}
+
+.nf-range::-moz-range-thumb {
+  inline-size: 18px;
+  block-size: 18px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-accent);
+}
+
+.nf-range:hover:not(:disabled)::-webkit-slider-thumb {
+  background-color: var(--color-accent-hover);
+}
+
+.nf-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: var(--focus-ring);
+}
+
+.nf-range:disabled {
+  cursor: not-allowed;
+}
+
+.nf-range:disabled::-webkit-slider-thumb {
+  background-color: var(--color-text-3);
+}
+
+.nf-range:disabled::-moz-range-thumb {
+  background-color: var(--color-text-3);
+}
+
+/* ====================================================================== */
+/* Recent Sort Control                                                    */
+/* ====================================================================== */
+
+.nf-recent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+}
+
+/* 잠금 상태는 아이콘·설명과 함께 파선 경계로 알린다. 색만으로 전달하지 않는다. */
+.nf-recent--locked {
+  border-style: dashed;
+  background-color: var(--color-surface-1);
+}
+
+.nf-recent--locked .nf-recent__row {
+  color: var(--color-text-3);
+}
+
+.nf-recent__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  color: var(--color-text-1);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+}
+
+.nf-recent__hint {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+/* ====================================================================== */
+/* Result Summary                                                         */
+/* ====================================================================== */
+
+.nf-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.nf-summary__count {
+  color: var(--color-text-1);
+  font-size: var(--font-size-h2);
+  line-height: var(--line-height-h2);
+  font-weight: var(--font-weight-h2);
+  font-variant-numeric: tabular-nums;
+}
+
+.nf-summary__conditions {
+  color: var(--color-text-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.nf-summary__badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-badge);
+}
+
+/* ====================================================================== */
+/* Discovery Progress                                                     */
+/*                                                                        */
+/* Fill 비율은 컴포넌트가 인라인 width 또는 `--nf-progress-value` 로 넘긴다.*/
+/* 결과 Grid 를 가리는 Full-screen Spinner 는 쓰지 않는다.                 */
+/* ====================================================================== */
+
+.nf-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.nf-progress__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-inline-size: 0;
+}
+
+.nf-progress__bar {
+  block-size: 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-3);
+  overflow: hidden;
+}
+
+.nf-progress__fill {
+  display: block;
+  inline-size: var(--nf-progress-value, 0%);
+  block-size: 100%;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-accent);
+  transition: inline-size var(--duration-panel) var(--easing-panel);
+}
+
+.nf-progress__text {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====================================================================== */
+/* Live Card                                                              */
+/* ====================================================================== */
+
+.nf-card {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  /* 그리드 칸을 가득 채워 같은 행의 카드가 모두 같은 높이가 되게 한다. */
+  block-size: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface-1);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  /* 결과가 많아도 스크롤이 끊기지 않게 화면 밖 카드의 렌더링을 미룬다. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--layout-card-intrinsic-height);
+  /* fill-mode 를 두지 않는다. 남으면 Hover transform 을 덮어쓴다. */
+  animation: nf-card-enter var(--duration-card-enter) var(--easing-card-enter);
+  transition:
+    border-color var(--duration-hover) var(--easing-hover),
+    box-shadow var(--duration-hover) var(--easing-hover),
+    transform var(--duration-hover) var(--easing-hover);
+}
+
+@keyframes nf-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.nf-card:hover {
+  border-color: var(--color-accent-line);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+  color: inherit;
+  text-decoration: none;
+}
+
+.nf-card:active {
+  transform: translateY(0);
+}
+
+.nf-card__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-surface-2);
+  overflow: hidden;
+}
+
+.nf-card__thumb {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-panel) var(--easing-panel);
+}
+
+/* Thumbnail Zoom 은 1.02 로 제한한다. */
+.nf-card:hover .nf-card__thumb {
+  transform: scale(1.02);
+}
+
+.nf-card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  pointer-events: none;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(0 0 0 / 42%) 0%,
+    rgb(0 0 0 / 0%) 38%,
+    rgb(0 0 0 / 0%) 62%,
+    rgb(0 0 0 / 42%) 100%
+  );
+}
+
+.nf-card__overlay-left,
+.nf-card__overlay-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.nf-card__overlay-right {
+  align-items: flex-end;
+}
+
+.nf-card__overlay .nf-metric {
+  padding-block: 2px;
+  padding-inline: 7px;
+  border-radius: var(--radius-badge);
+  background-color: var(--color-scrim);
+  color: var(--color-text-1);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+}
+
+.nf-card__overlay .nf-badge {
+  background-color: var(--color-scrim-strong);
+}
+
+.nf-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  min-inline-size: 0;
+}
+
+/* 제목은 최대 두 줄. 카드 높이를 두 줄 기준으로 맞춘다. */
+.nf-card__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-block-size: calc(var(--line-height-h3) * 2);
+  color: var(--color-text-1);
+  font-size: var(--font-size-h3);
+  line-height: var(--line-height-h3);
+  font-weight: var(--font-weight-h3);
+  overflow-wrap: anywhere;
+}
+
+.nf-card__channel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-inline-size: 0;
+}
+
+.nf-card__avatar,
+.nf-card__avatar-fallback {
+  flex: none;
+  inline-size: 24px;
+  block-size: 24px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-3);
+  object-fit: cover;
+}
+
+.nf-card__avatar-fallback {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: 1;
+  font-weight: var(--font-weight-label);
+}
+
+.nf-card__name {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  color: var(--color-text-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*
+ * 메타는 항상 한 줄이다.
+ * 카테고리 이름이 길다고 두 줄로 넘어가면 그 카드만 키가 커져서
+ * 결과 그리드가 들쭉날쭉해진다. 넘치는 부분은 잘라 낸다.
+ */
+.nf-card__meta {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: auto;
+  min-inline-size: 0;
+  block-size: var(--line-height-caption);
+  overflow: hidden;
+  color: var(--color-text-3);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+.nf-card__meta-item {
+  /* 아이콘과 텍스트는 한 줄에 붙어 있어야 한다. */
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-inline-size: 0;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nf-card__meta-item .nf-icon {
+  inline-size: 13px;
+  block-size: 13px;
+  opacity: 0.85;
+}
+
+/* ====================================================================== */
+/* Skeleton Card                                                          */
+/* Shimmer 대신 낮은 대비의 Opacity Pulse 를 쓴다.                        */
+/* ====================================================================== */
+
+.nf-skeleton {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background-color: var(--color-surface-1);
+  overflow: hidden;
+}
+
+.nf-skeleton__media {
+  aspect-ratio: 16 / 9;
+  background-color: var(--color-surface-2);
+  opacity: 0.7;
+  animation: nf-skeleton-pulse var(--duration-skeleton) var(--easing-skeleton) infinite;
+}
+
+.nf-skeleton__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.nf-skeleton__line {
+  block-size: 12px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-2);
+  opacity: 0.7;
+  animation: nf-skeleton-pulse var(--duration-skeleton) var(--easing-skeleton) infinite;
+}
+
+.nf-skeleton__line--short {
+  inline-size: 58%;
+}
+
+@keyframes nf-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* ====================================================================== */
+/* Error / Partial Banner                                                 */
+/* Banner 는 결과를 가리지 않는다.                                        */
+/* ====================================================================== */
+
+.nf-banner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+}
+
+/*
+ * 세 색만 쓰므로 배너 종류는 색이 아니라 경계선의 모양·두께로 구분한다.
+ *   오류    두꺼운 실선  (가장 강한 신호)
+ *   경고    파선        (진행 가능하지만 완전하지 않음)
+ *   안내    얇은 실선
+ * 아이콘과 문구가 항상 함께 오므로 형태만으로도 구분된다.
+ */
+.nf-banner--error {
+  border-width: 2px;
+  border-color: var(--color-error-line);
+  background-color: var(--color-error-soft);
+}
+
+.nf-banner--error .nf-banner__icon {
+  color: var(--color-error);
+}
+
+.nf-banner--warning {
+  border-style: dashed;
+  border-color: var(--color-warning-line);
+  background-color: var(--color-warning-soft);
+}
+
+.nf-banner--warning .nf-banner__icon {
+  color: var(--color-warning);
+}
+
+.nf-banner--info {
+  border-color: var(--color-info-line);
+  background-color: var(--color-info-soft);
+}
+
+.nf-banner--info .nf-banner__icon {
+  color: var(--color-info);
+}
+
+.nf-banner__icon {
+  display: flex;
+  margin-block-start: 2px;
+  color: var(--color-text-2);
+}
+
+.nf-banner__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+.nf-banner__title {
+  color: var(--color-text-1);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-label);
+}
+
+.nf-banner__detail {
+  color: var(--color-text-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.nf-banner__code {
+  align-self: flex-start;
+  margin-block-start: var(--space-1);
+  padding-block: 2px;
+  padding-inline: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface-1);
+  color: var(--color-text-3);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  user-select: all;
+}
+
+.nf-banner__action {
+  align-self: center;
+  justify-self: end;
+}
+
+/* ====================================================================== */
+/* Empty State                                                            */
+/* ====================================================================== */
+
+.nf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12) var(--space-6);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-1);
+  text-align: center;
+}
+
+.nf-empty__icon {
+  inline-size: 32px;
+  block-size: 32px;
+  color: var(--color-text-3);
+}
+
+.nf-empty__title {
+  color: var(--color-text-1);
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-display);
+  font-weight: var(--font-weight-display);
+  letter-spacing: -0.01em;
+}
+
+.nf-empty__detail {
+  max-inline-size: 46ch;
+  color: var(--color-text-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.nf-empty__action {
+  margin-block-start: var(--space-1);
+}
+
+/* ====================================================================== */
+/* Inline Note                                                            */
+/* ====================================================================== */
+
+.nf-inline-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+.nf-inline-note__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 24px;
+  block-size: 24px;
+  margin-inline-start: auto;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-3);
+  transition:
+    background-color var(--duration-hover) var(--easing-hover),
+    color var(--duration-hover) var(--easing-hover);
+}
+
+.nf-inline-note__close:hover {
+  background-color: var(--color-surface-3);
+  color: var(--color-text-1);
+}
+
+.nf-inline-note__close .nf-icon {
+  inline-size: 14px;
+  block-size: 14px;
+}
+
+/* ====================================================================== */
+/* Footer: 최소 12px, 충분한 대비를 유지한다.                            */
+/* ====================================================================== */
+
+.nf-footer__inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+}
+
+.nf-footer__block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-badge);
+  min-inline-size: 0;
+}
+
+.nf-footer__title {
+  color: var(--color-text-1);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+}
+
+.nf-footer__note {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+}
+
+.nf-footer__meta {
+  color: var(--color-text-3);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ====================================================================== */
+/* 컴포넌트 반응형                                                        */
+/* ====================================================================== */
+
+/* 900~1279px: 상단으로 올라온 Filter Panel 을 2열로 편다. */
+@media (min-width: 900px) and (max-width: 1279px) {
+  .nf-panel__body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .nf-panel__summary,
+  .nf-panel__help {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 599px) {
+  .nf-panel {
+    padding: var(--space-4);
+  }
+
+  /* Banner 는 좁은 화면에서 세로로 쌓고 Action 을 아래로 내린다. */
+  .nf-banner {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .nf-banner__action {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .nf-empty {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .nf-empty__title {
+    font-size: var(--font-size-h1);
+    line-height: var(--line-height-h1);
+  }
+}
+
+/* ====================================================================== */
+/* Reduced Motion                                                         */
+/* Skeleton 은 정적으로, 카드 진입은 즉시 표시로 바꾼다.                   */
+/* ====================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-skeleton__media,
+  .nf-skeleton__line {
+    animation: none;
+    opacity: 0.7;
+  }
+
+  .nf-card {
+    animation: none;
+  }
+
+  .nf-card:hover {
+    transform: none;
+  }
+
+  .nf-card:hover .nf-card__thumb {
+    transform: none;
+  }
+
+  .nf-button__spinner {
+    animation: none;
+    border-block-start-color: currentColor;
+    opacity: 0.45;
+  }
+}
+
+/* ====================================================================== */
+/* 컴포넌트 구현에서 실제로 쓰는 나머지 클래스                              */
+/* ====================================================================== */
+
+/* 헤더: 마지막 갱신 시각. 캐시를 실시간처럼 보이지 않게 배지 옆에 항상 붙는다. */
+.nf-header__updated {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* 아직 탐색 전 / 탐색 중 배지. 색만으로 구분하지 않도록 텍스트가 항상 함께 온다. */
+.nf-badge--idle {
+  background: var(--color-surface-3);
+  border-color: var(--color-border);
+  color: var(--color-text-2);
+}
+
+.nf-badge--loading {
+  background: var(--color-surface-3);
+  border-color: var(--color-border-strong);
+  color: var(--color-text-1);
+}
+
+.nf-badge--loading .nf-badge__dot {
+  background: var(--color-accent);
+  animation: nf-badge-pulse 1200ms ease-in-out infinite;
+}
+
+@keyframes nf-badge-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-badge--loading .nf-badge__dot {
+    animation: none;
+  }
+}
+
+.nf-panel__summary-label {
+  display: block;
+  color: var(--color-text-3);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: 600;
+  margin-block-end: var(--space-1);
+}
+
+/* 최근 정렬이 잠겼을 때 스위치 자리에 들어가는 자물쇠 */
+.nf-recent__lock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 40px;
+  block-size: 22px;
+  color: var(--color-text-3);
+  flex: none;
+}
+
+/* 결과 요약 보조 줄: 탐색 범위와 판정 대기 수 */
+.nf-summary__coverage {
+  color: var(--color-text-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  margin-block-start: var(--space-1);
+}
+
+.nf-summary__pending {
+  color: var(--color-warning);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-variant-numeric: tabular-nums;
+  margin-block-start: var(--space-1);
+}
+
+.nf-app__continue {
+  justify-content: center;
+  margin-block-start: var(--space-6);
+}
+
+/* 채널 ID 형식이 어긋나 링크를 만들 수 없는 카드. 호버 반응을 주지 않는다. */
+.nf-card--static {
+  cursor: default;
+}
+
+.nf-card--static:hover {
+  transform: none;
+  border-color: var(--color-border);
+  box-shadow: none;
+}

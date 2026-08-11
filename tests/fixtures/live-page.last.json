@@ -1,0 +1,49 @@
+{
+  "code": 200,
+  "message": null,
+  "content": {
+    "size": 50,
+    "page": {
+      "next": null,
+      "prev": null
+    },
+    "data": [
+      {
+        "liveId": 20476301,
+        "liveTitle": "혼자 조용히 방송 중",
+        "liveImageUrl": "https://livecloud-thumb.akamaized.net/chzzk/livecloud/example-d/thumbnail/image_{type}.jpg",
+        "defaultThumbnailImageUrl": null,
+        "concurrentUserCount": 1,
+        "openDate": "2026-08-11 01:30:00",
+        "adult": false,
+        "categoryType": "TALK",
+        "liveCategory": "EXAMPLE_TALK",
+        "liveCategoryValue": "테스트 토크",
+        "channel": {
+          "channelId": "9f8e7d6c5b4a39281706f5e4d3c2b1a0",
+          "channelName": "채널D",
+          "channelImageUrl": "",
+          "verifiedMark": false
+        }
+      },
+      {
+        "liveId": 20476290,
+        "liveTitle": "방송 켜 두고 작업합니다",
+        "liveImageUrl": "https://livecloud-thumb.akamaized.net/chzzk/livecloud/example-e/thumbnail/image_{type}.jpg",
+        "defaultThumbnailImageUrl": null,
+        "concurrentUserCount": 0,
+        "openDate": "2026-08-11 01:05:42",
+        "adult": false,
+        "categoryType": "TALK",
+        "liveCategory": "EXAMPLE_TALK",
+        "liveCategoryValue": "테스트 토크",
+        "channel": {
+          "channelId": "00112233445566778899aabbccddeeff",
+          "channelName": "채널E",
+          "channelImageUrl": "",
+          "verifiedMark": false
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>데이터 계약 위험 | NewbieFinder</title>
+    <meta
+      name="description"
+      content="비공식 응답에 의존하는 데서 오는 위험과 그 대응을 정리했습니다. 접근이 제한되면 우회하지 않는다는 원칙을 포함합니다."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='4' fill='%23000'/%3E%3Cg fill='none' stroke='%2300FFA3' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M11.8 17.3A5.3 5.3 0 1 1 16.5 14.8'/%3E%3Cpath d='M11.7 21.1A9.1 9.1 0 1 1 19.7 16.8'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='2' fill='%2300FFA3'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="./assets/site.css" />
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" rx="4" fill="#000" />
+            <g fill="none" stroke="#00FFA3" stroke-width="2" stroke-linecap="round">
+              <path d="M11.8 17.3A5.3 5.3 0 1 1 16.5 14.8" />
+              <path d="M11.7 21.1A9.1 9.1 0 1 1 19.7 16.8" />
+            </g>
+            <circle cx="12" cy="12" r="2" fill="#00FFA3" />
+          </svg>
+          <strong>NewbieFinder</strong>
+          <span>데이터 계약 위험</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <div class="wrap hero">
+        <h1>데이터 계약 위험</h1>
+        <p class="meta">
+          대상 제품: NewbieFinder v1.0.0<br />
+          최종 갱신일: 2026년 8월 11일<br />
+          계약 실측일: 2026년 8월 11일
+        </p>
+        <p>
+          NewbieFinder는 치지직 개발자 센터에 등록하지 않았고 공식 Open API(<code>/open/v1/*</code>)를
+          호출하지 않습니다. 대신 치지직 웹 클라이언트가 사용하는 읽기 전용
+          응답(<code>https://api.chzzk.naver.com/service/v1/*</code>)을 읽습니다.
+        </p>
+
+        <div class="summary" style="margin-top: 28px">
+          <p>
+            <strong>이 경로와 응답 필드는 공개된 공식 계약이 아닙니다.</strong> 사전 공지 없이 경로,
+            응답 필드, 페이지네이션, CORS, 접근 정책이 변경되거나 차단될 수 있습니다.
+          </p>
+        </div>
+
+        <p style="margin-top: 24px">
+          이 문서는 그 전제 아래 "무엇이 깨질 수 있고, 깨지면 어떤 증상이 보이며, 어떻게 감지하고,
+          무엇을 하는지"를 기록합니다.
+        </p>
+
+        <nav class="toc" style="margin-top: 28px" aria-label="목차">
+          <ol>
+            <li><a href="#principle">우회하지 않는다</a></li>
+            <li><a href="#contract">실측으로 확인한 계약</a></li>
+            <li><a href="#register">위험 등록부</a></li>
+            <li><a href="#detection">감지 체계 요약</a></li>
+            <li><a href="#procedure">계약 파손 대응 절차</a></li>
+            <li><a href="#reference">참고</a></li>
+          </ol>
+        </nav>
+      </div>
+
+      <section id="principle">
+        <div class="wrap">
+          <h2>1. 우회하지 않는다 (First Principle)</h2>
+          <p>
+            이 원칙은 다른 모든 항목보다 우선합니다. 대응 방안을 고를 때 이 원칙과 충돌하는 선택지는
+            검토 대상이 아닙니다.
+          </p>
+
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">상황</th>
+                  <th scope="col">우리가 하는 것</th>
+                  <th scope="col">우리가 하지 않는 것</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>429 Too Many Requests</code></td>
+                  <td>
+                    남은 큐를 흘려보내고 즉시 중단합니다. <code>Retry-After</code> 를 존중하되 30초를
+                    넘으면 재시도 없이 <code>RATE_LIMITED</code> 로 멈춥니다. 확보한 결과만 부분
+                    결과로 표시합니다.
+                  </td>
+                  <td><code>429</code> 를 무시한 재시도, 지연 없는 반복 호출, 동시성 상향</td>
+                </tr>
+                <tr>
+                  <td><code>403 Forbidden</code> / <code>401</code></td>
+                  <td>
+                    <code>ACCESS_DENIED</code> 로 중단합니다. "우회하지 않고 탐색을 중단했습니다"
+                    라고 사용자에게 그대로 알립니다. 재시도 버튼을 제공하지 않습니다.
+                  </td>
+                  <td>헤더 위장, 프록시 경유, 다른 경로 무차별 시도</td>
+                </tr>
+                <tr>
+                  <td>봇 방어 / CAPTCHA</td>
+                  <td>기능을 중단하고 제품 범위를 다시 검토합니다.</td>
+                  <td>CAPTCHA 자동 해결, 자동화 탐지 회피, 브라우저 지문 조작</td>
+                </tr>
+                <tr>
+                  <td>인증이 필요해짐</td>
+                  <td>제품 범위를 재검토합니다. 필요하면 기능을 제거합니다.</td>
+                  <td>로그인 쿠키 추출 안내, 사용자 토큰 요구, 비공식 인증 우회</td>
+                </tr>
+                <tr>
+                  <td>응답 형식 변경</td>
+                  <td>어댑터를 수정해 정식 업데이트로 배포합니다.</td>
+                  <td>DOM 크롤링으로 즉시 대체, 임의 추론으로 필드 채우기</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-top: 24px">추가로 다음을 구현하지 않습니다.</p>
+          <ul class="plain">
+            <li><code>User-Agent</code>, <code>Origin</code>, <code>Referer</code> 위장</li>
+            <li>브라우저 지문 생성</li>
+            <li>사용자 모르게 주기적으로 도는 백그라운드 수집</li>
+            <li>결과를 중앙 서버로 업로드</li>
+            <li>확인되지 않은 API 버전 경로를 자동으로 순회 시도</li>
+            <li>
+              공식 CHZZK 로고를 확장 아이콘으로 사용하거나 "공식", "파트너", "인증" 으로 오인시키는
+              문구 사용
+            </li>
+          </ul>
+
+          <p style="margin-top: 20px">
+            모든 요청은 <code>credentials: "omit"</code>, <code>redirect: "error"</code>,
+            <code>referrerPolicy: "no-referrer"</code> 로 보내며, URL은
+            <code>origin === https://api.chzzk.naver.com</code> 허용 목록을 통과한 경우에만
+            사용합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="contract">
+        <div class="wrap">
+          <h2>2. 2026-08-11 실측으로 확인한 계약</h2>
+          <p>아래 값이 현재 구현의 전제입니다. 하나라도 어긋나면 3장의 해당 항목을 확인해 주세요.</p>
+
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">계약 항목</th>
+                  <th scope="col">실측 결과</th>
+                  <th scope="col">코드 위치</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>C-1</td>
+                  <td>라이브 목록 경로</td>
+                  <td><code>GET /service/v1/lives</code> → <code>200</code> JSON</td>
+                  <td><code>chzzk-web/endpoints.ts</code></td>
+                </tr>
+                <tr>
+                  <td>C-2</td>
+                  <td>페이지 크기 상한</td>
+                  <td>
+                    <code>size</code> <strong>최대 50</strong>. 초과 요청 시 데이터가 늘지 않고
+                    <strong>빈 배열</strong> 반환
+                  </td>
+                  <td><code>LIVE_PAGE_SIZE = 50</code></td>
+                </tr>
+                <tr>
+                  <td>C-3</td>
+                  <td>기본 정렬</td>
+                  <td><code>sortType</code> 미지정 시 <strong>시청자 수 내림차순</strong></td>
+                  <td><code>buildLiveListUrl()</code></td>
+                </tr>
+                <tr>
+                  <td>C-4</td>
+                  <td>페이지네이션</td>
+                  <td>
+                    <code>content.page.next</code> = <code>{ concurrentUserCount, liveId }</code>
+                    <strong>keyset 커서</strong>, 기본 정렬에서 이 쌍의 내림차순
+                  </td>
+                  <td><code>live-adapter.ts</code></td>
+                </tr>
+                <tr>
+                  <td>C-5</td>
+                  <td>시드 커서</td>
+                  <td>
+                    <code>{ concurrentUserCount: viewerMax + 1, liveId: 0 }</code> 으로 시드하면 조건
+                    구간 첫 항목부터 수신
+                  </td>
+                  <td><code>seedCursorForViewerCeiling()</code></td>
+                </tr>
+                <tr>
+                  <td>C-6</td>
+                  <td><code>LATEST</code> 정렬</td>
+                  <td><code>sortType=LATEST</code> 는 시작 시각 내림차순</td>
+                  <td><code>buildLiveListUrl()</code></td>
+                </tr>
+                <tr>
+                  <td>C-7</td>
+                  <td>v2 경로</td>
+                  <td>
+                    <code>GET /service/v2/lives</code> → <strong><code>404</code>. v2는 존재하지
+                    않습니다.</strong>
+                  </td>
+                  <td>(구현하지 않음)</td>
+                </tr>
+                <tr>
+                  <td>C-8</td>
+                  <td>채널 정보</td>
+                  <td>
+                    <code>GET /service/v1/channels/{id}</code> → <code>200</code> JSON,
+                    <code>content.followerCount</code> 포함
+                  </td>
+                  <td><code>channel-adapter.ts</code></td>
+                </tr>
+                <tr>
+                  <td>C-9</td>
+                  <td>존재하지 않는 채널</td>
+                  <td>
+                    <strong><code>404</code> 가 아니라 <code>200</code> +
+                    <code>followerCount: 0</code> 자리표시자.</strong> <code>content.channelId</code>
+                    가 <code>null</code> 이거나 요청 ID와 다릅니다.
+                  </td>
+                  <td><code>adaptChannelInfo()</code></td>
+                </tr>
+                <tr>
+                  <td>C-10</td>
+                  <td>날짜 형식</td>
+                  <td>
+                    <code>openDate</code> = 오프셋 없는 <code>YYYY-MM-DD HH:mm:ss</code>,
+                    <strong>한국 표준시(UTC+09:00) 벽시계</strong>
+                  </td>
+                  <td><code>CHZZK_OPEN_DATE_UTC_OFFSET</code></td>
+                </tr>
+                <tr>
+                  <td>C-11</td>
+                  <td>인증</td>
+                  <td>로그인 쿠키 없이(<code>credentials: "omit"</code>) 공개 데이터 반환</td>
+                  <td><code>fetch-json.ts</code></td>
+                </tr>
+                <tr>
+                  <td>C-12</td>
+                  <td>CORS</td>
+                  <td>확장 오리진에서 요청 허용</td>
+                  <td><code>client.ts</code></td>
+                </tr>
+                <tr>
+                  <td>C-13</td>
+                  <td>채널 ID 형식</td>
+                  <td>32자리 소문자 16진수</td>
+                  <td><code>CHANNEL_ID_PATTERN</code></td>
+                </tr>
+                <tr>
+                  <td>C-14</td>
+                  <td>썸네일 호스트</td>
+                  <td><code>*.pstatic.net</code>, <code>*.akamaized.net</code></td>
+                  <td><code>ALLOWED_IMAGE_HOST_SUFFIXES</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="register">
+        <div class="wrap">
+          <h2>3. 위험 등록부</h2>
+
+          <h3>3.1. 발생 가능성·영향 요약</h3>
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">위험</th>
+                  <th scope="col">가능성</th>
+                  <th scope="col">영향</th>
+                  <th scope="col">대응 요약</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>R-01</td>
+                  <td>비공식 엔드포인트 경로·필드 변경</td>
+                  <td>높음</td>
+                  <td>높음</td>
+                  <td>어댑터 격리, 계약 오류, 긴급 Patch</td>
+                </tr>
+                <tr>
+                  <td>R-02</td>
+                  <td>CORS·접근 정책 변경</td>
+                  <td>중간</td>
+                  <td>높음</td>
+                  <td>우회하지 않고 기능 중단·재설계</td>
+                </tr>
+                <tr>
+                  <td>R-03</td>
+                  <td>팔로워 요청량 증가</td>
+                  <td>높음</td>
+                  <td>중간</td>
+                  <td>캐시, 동시성 4, 예산 300, 부분 결과</td>
+                </tr>
+                <tr>
+                  <td>R-04</td>
+                  <td>라이브 수 증가</td>
+                  <td>중간</td>
+                  <td>중간</td>
+                  <td>점진 렌더링, 탐색 예산, <code>계속 탐색</code></td>
+                </tr>
+                <tr>
+                  <td>R-05</td>
+                  <td>썸네일 호스트 변경</td>
+                  <td>중간</td>
+                  <td>낮음</td>
+                  <td>CSP·허용 목록 갱신, 대체 이미지</td>
+                </tr>
+                <tr>
+                  <td>R-06</td>
+                  <td>날짜 포맷·시간대 변경</td>
+                  <td>중간</td>
+                  <td>중간</td>
+                  <td>원본 보존, 파서 계약 테스트</td>
+                </tr>
+                <tr>
+                  <td>R-07</td>
+                  <td>치지직 상표 오인</td>
+                  <td>낮음</td>
+                  <td>중간</td>
+                  <td>독립 로고, 비제휴 고지</td>
+                </tr>
+                <tr>
+                  <td>R-08</td>
+                  <td>Chrome 정책 변경</td>
+                  <td>중간</td>
+                  <td>중간</td>
+                  <td>MV3 공식 문서 추적, 권한 재검토</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>3.2. 계약 항목별 상세</h3>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-01a. 페이지 크기 상한 변경 (C-2)</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td><code>size</code> 최대 50. 초과 시 빈 배열</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    상한이 내려가면 첫 페이지부터 빈 배열이 돌아와 결과가 0건이 됩니다. 커서도
+                    전진하지 않아 탐색이 즉시 끝난 것처럼 보입니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    <code>npm run contract:live</code> 의 페이지 크기 검증. 런타임에서는
+                    <code>scannedLives === 0</code> 인데 오류 코드가 없는 상태로 관찰됩니다. 무한 루프
+                    방지 가드(<code>page.rawCount === 0</code> 이면 중단)가 함께 걸립니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    <code>LIVE_PAGE_SIZE</code> 를 낮춰 Patch 배포합니다.
+                    예산 계산(<code>resolveBudgetLimits</code>)이 이 값을 참조하므로 함께
+                    재검증합니다. <strong>상한을 올려 보는 시도는 하지 않습니다.</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">
+            R-01b. 기본 정렬·커서 의미 변경 (C-3, C-4, C-5)
+          </h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    기본 정렬 = 시청자 수 내림차순, 커서 =
+                    <code>(concurrentUserCount, liveId)</code> 내림차순 keyset. 시드 커서로 조건 구간
+                    진입 가능
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    <code>viewer-tail</code> 전략의 전제가 무너집니다. 시드 커서가 엉뚱한 구간을
+                    가리켜 결과가 비거나, 시청자 상한을 넘는 방송이 응답에 섞입니다.
+                    <strong>가장 위험한 시나리오는 "결과는 나오는데 조건 구간을 다 훑지 못한 상태에서
+                    완전 탐색이라고 표시하는 것"입니다.</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    계약 테스트에서 시드 커서 응답의 첫 항목 시청자 수가 상한 이하인지 확인합니다.
+                    런타임에서는 응답 항목의 <code>concurrentUserCount</code> 가 커서 값보다 큰 경우를
+                    진단 신호로 삼습니다. 도메인 필터가 최종 방어선이므로 조건 초과 항목이 화면에
+                    나오지는 않습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    시드 커서 사용을 중단하고 <code>viewer-tail</code> 을 <code>latest</code> 로
+                    강등해, <strong>완전 탐색 주장을 먼저 내립니다.</strong> 그다음 새 커서 의미를
+                    재확인해 Patch 배포합니다. 잘못된 완전성 주장을 유지한 채 결과만 보여주지
+                    않습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">
+            R-01c. 응답 스키마 변경 (필드 삭제·이름 변경)
+          </h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    <code>content.data[]</code> 에 <code>liveId</code>, <code>liveTitle</code>,
+                    <code>concurrentUserCount</code>, <code>openDate</code>, <code>adult</code>,
+                    <code>channel.channelId</code>, <code>channel.channelName</code>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    런타임 스키마 검증이 실패하고 <code>LIVE_SCHEMA_CHANGED</code> 로 결과 그리드가
+                    숨겨집니다. 화면에는 "치지직 데이터 형식이 변경된 것으로 보입니다" 가 표시됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    Zod 스키마 검증 실패. 계약 테스트와 사용자 신고. 픽스처 기반 유닛
+                    테스트(<code>live-page.changed.json</code>)가 이 경로를 상시 검증합니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    <strong>필드가 사라져도 기본값으로 채워 숨기지 않습니다.</strong> 어댑터와
+                    스키마만 수정해 긴급 Patch로 배포합니다. 수정 범위가
+                    <code>infrastructure/chzzk-web/</code> 를 벗어나면 계층 격리가 깨진 것이므로 함께
+                    점검합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-01d. 경로 버전 변경 (C-7)</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    <code>/service/v1/*</code> 만 존재. <code>/service/v2/lives</code> 는
+                    <code>404</code>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    <code>v1</code> 이 사라지면 모든 요청이 <code>404</code> 가 되어
+                    <code>INVALID_RESPONSE</code> 로 중단됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>계약 테스트의 상태 코드 검증. 런타임에서는 첫 페이지 요청부터 실패합니다.</td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    <code>endpoints.ts</code> 한 파일만 수정해 Patch 배포합니다.
+                    <strong><code>v2</code>, <code>v3</code> 를 자동으로 순회 시도하는 폴백을 넣지
+                    않습니다.</strong> 새 경로는 사람이 확인하고 명시적으로 반영합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">
+            R-01e. 존재하지 않는 채널의 자리표시자 응답 (C-9)
+          </h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    존재하지 않는 채널도 <code>200</code> + <code>followerCount: 0</code>,
+                    <code>content.channelId</code> 는 <code>null</code> 이거나 요청 ID와 다름
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    대조 로직이 없거나 무력화되면 <strong>존재하지 않는 채널이 "팔로워 0명" 으로
+                    해석되어 모든 팔로워 조건을 통과합니다.</strong> 결과에 유령 카드가 섞이고,
+                    클릭하면 없는 채널 페이지로 이동합니다. 반대로 서버가 대조
+                    기준(<code>channelId</code> 반환 방식)을 바꾸면 정상 채널이 전부
+                    <code>unknown-channel</code> 로 분류되어 팔로워 결과가 0건이 됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    픽스처 기반 유닛 테스트(존재하지 않는 ID 요청 → <code>unknown-channel</code>
+                    기대). 런타임에서는 <code>unresolvedChannels</code> 비율이 비정상적으로 높은
+                    상태로 관찰됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    대조 조건을 응답 구조에 맞게 수정해 Patch 배포합니다. <strong>어떤 경우에도
+                    <code>followerCount: 0</code> 을 검증 없이 신뢰하지 않습니다.</strong> 미확인
+                    상태는 <code>failed</code> 로 분리하고 조건 충족으로 추정하지 않습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">
+            R-01f. <code>followerCount</code> 필드 삭제
+          </h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td><code>content.followerCount</code> 는 유한한 0 이상의 수</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    <code>CHANNEL_SCHEMA_CHANGED</code> 가 발생합니다. 결과 그리드는 유지되고 시청자
+                    조건 결과만 표시됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    어댑터의 타입·범위 검증. 픽스처(<code>channel.changed.json</code>) 테스트.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    팔로워 조건 기능을 일시적으로 비활성화하는 것까지 검토합니다. 팔로워 수를 다른
+                    필드에서 추론하거나 0으로 대체하지 않습니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-02. CORS·접근 정책 변경</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    확장 오리진에서 CORS 허용, 로그인 쿠키 없이 공개 데이터 반환 (C-11, C-12)
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    fetch가 CORS 오류로 실패하거나 <code>401</code>/<code>403</code> 이 돌아옵니다.
+                    사용자에게는 "현재 데이터에 접근할 수 없습니다" 가 표시됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    계약 테스트의 CORS 항목. 런타임에서는 <code>ACCESS_DENIED</code> 또는
+                    <code>TypeError</code> 계열 실패.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    <strong>우회하지 않습니다.</strong> 기능을 중단하고 제품 범위를 다시 검토합니다.
+                    헤더 위장, 프록시 서버 도입, 쿠키 요구는 검토 대상이 아닙니다. 접근이 영구적으로
+                    막히면 확장 배포를 중단하는 것까지 포함해 판단합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-03. 팔로워 요청량 증가</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>채널 1건당 요청 1건, 동시성 4, 실행당 최대 300건</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    라이브 수가 늘거나 캐시 적중률이 떨어지면 <code>429</code> 빈도가 올라갑니다. 부분
+                    결과가 잦아지고 판정 대기 카운트가 커집니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    <code>partialReason</code> 이 <code>rate-limit</code> 또는
+                    <code>channel-budget</code> 인 비율. 개발 모드 디버그 이벤트의
+                    <code>followers.resolved</code> 소요 시간.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    캐시 TTL과 예산을 조정합니다. <strong>동시성을 4보다 올리는 방향으로는 대응하지
+                    않습니다.</strong> 필요하면 예산을 더 낮추고 <code>계속 탐색</code> 을 통해
+                    사용자가 명시적으로 이어가도록 합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-04. 라이브 수 증가</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>페이지 50건, 실행당 최대 20페이지</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    조건 구간이 넓어져 커서 소진 전에 예산이 먼저 끝납니다. 완전 탐색 판정이 나오는
+                    빈도가 줄어듭니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    <code>coverage.exhausted === false</code> 비율,
+                    <code>partialReason === "page-budget"</code> 비율.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    점진 렌더링과 <code>계속 탐색</code> 으로 흡수합니다. 예산 상향은 요청량 영향을
+                    함께 계산한 뒤에만 검토합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-05. 썸네일 호스트 변경 (C-14)</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td><code>*.pstatic.net</code>, <code>*.akamaized.net</code></td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    새 호스트의 이미지가 CSP에 막혀 모든 카드가 대체 이미지로 표시됩니다. 콘솔에 CSP
+                    위반이 기록됩니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>콘솔 CSP 위반 경고. 대체 이미지 비율 급증.</td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    manifest의 <code>img-src</code> 와 <code>ALLOWED_IMAGE_HOST_SUFFIXES</code> 를
+                    <strong>같은 범위로</strong> 갱신해 Patch 배포합니다. 둘 중 하나만 고치면 안
+                    됩니다. 그 전까지는 대체 이미지로 안전하게 동작합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-06. 날짜 포맷·시간대 변경 (C-10)</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>오프셋 없는 <code>YYYY-MM-DD HH:mm:ss</code>, KST(UTC+09:00) 벽시계</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    시간대 해석이 9시간 어긋나 "9시간 전 시작" 같은 값이 나오거나, 형식이 바뀌면
+                    파싱에 실패해 <code>시작 시간 확인 불가</code> 로 표시됩니다. 최근 시작 순 정렬이
+                    뒤섞입니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>
+                    파서 계약 테스트(고정 문자열 → 기대 epoch). 런타임에서는
+                    <code>unparsedDates</code> 카운트 증가.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    원본 <code>openDate</code> 문자열을 항상 보존하고 있으므로 어댑터의 오프셋 처리만
+                    수정합니다. <strong>파싱 실패는 라이브 제외 사유가 아닙니다.</strong> 정렬에서
+                    뒤로 보내고 진단 카운트에만 반영합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-07. 치지직 상표 오인</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>독립 로고, Footer 비제휴 고지 상시 노출</td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>사용자가 공식 서비스로 오인하거나, 상표권 문제 제기를 받을 수 있습니다.</td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>QA 체크리스트의 브랜드 항목, 사용자 문의.</td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    공식 로고를 사용하지 않고, "공식 / 파트너 / 인증" 으로 오인시키는 문구를 쓰지
+                    않습니다. 비제휴 고지는 접을 수 없는 상시 노출로 유지합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 style="margin: 28px 0 8px; font-size: 16px">R-08. Chrome 정책 변경</h4>
+          <div class="table-scroll" style="margin-top: 12px">
+            <table>
+              <tbody>
+                <tr>
+                  <th scope="row">현재 계약</th>
+                  <td>
+                    MV3, Chrome 120 이상, <code>declarativeContent</code> + <code>storage</code> +
+                    단일 호스트 권한
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">깨졌을 때 증상</th>
+                  <td>
+                    <code>declarativeContent</code> 지원 변경 시 아이콘 활성화 규칙이 동작하지
+                    않거나, 호스트 권한 정책 변경으로 요청이 차단될 수 있습니다.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">감지 방법</th>
+                  <td>Chrome 릴리스 노트와 MV3 공식 문서 추적. 브라우저 업데이트 후 E2E 회귀.</td>
+                </tr>
+                <tr>
+                  <th scope="row">대응</th>
+                  <td>
+                    권한 구성을 다시 검토합니다. 권한을 넓혀 해결하는 방향은 마지막 선택지이며,
+                    늘어나는 권한은 반드시 <code>CHANGELOG.md</code> 와 <code>PERMISSIONS.md</code> 에
+                    명시합니다.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="detection">
+        <div class="wrap">
+          <h2>4. 감지 체계 요약</h2>
+          <div class="table-scroll" style="margin-top: 20px">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">계층</th>
+                  <th scope="col">무엇을 잡나</th>
+                  <th scope="col">실행 시점</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Zod 런타임 스키마</td>
+                  <td>봉투·필드 구조 변경</td>
+                  <td>매 응답</td>
+                </tr>
+                <tr>
+                  <td>어댑터 검증</td>
+                  <td>채널 ID 대조, 음수·비유한 값, URL 허용 목록</td>
+                  <td>매 응답</td>
+                </tr>
+                <tr>
+                  <td>도메인 필터</td>
+                  <td>조건 초과 항목의 최종 차단 (마지막 방어선)</td>
+                  <td>매 렌더</td>
+                </tr>
+                <tr>
+                  <td>픽스처 유닛 테스트</td>
+                  <td>정상·변경 응답 양쪽 경로</td>
+                  <td><code>npm run test</code></td>
+                </tr>
+                <tr>
+                  <td>통합 테스트</td>
+                  <td>부분 결과·캐시 폴백·429 처리</td>
+                  <td><code>npm run test</code></td>
+                </tr>
+                <tr>
+                  <td>계약 테스트</td>
+                  <td>실제 응답과의 계약 일치</td>
+                  <td><code>npm run contract:live</code> (<strong>수동</strong>)</td>
+                </tr>
+                <tr>
+                  <td>E2E</td>
+                  <td>권한·아이콘·링크·쿨다운</td>
+                  <td><code>npm run test:e2e</code></td>
+                </tr>
+                <tr>
+                  <td>manifest 검증</td>
+                  <td>권한·CSP·경로</td>
+                  <td><code>npm run validate:manifest</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="margin-top: 20px">
+            계약 테스트는 <strong>수동 실행 전용</strong>입니다. CI 스케줄에 넣어 고빈도로 호출하지
+            않습니다. 실패가 접근 제한을 의미하는 경우 재시도하지 않고 출시를 보류합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="procedure">
+        <div class="wrap">
+          <h2>5. 계약 파손 대응 절차</h2>
+          <pre style="margin-top: 20px"><code>① 증상 확인
+     사용자 신고 / 계약 테스트 실패 / 오류 코드 급증
+        │
+        ▼
+② 분류
+     ├─ 스키마 변경   → LIVE_SCHEMA_CHANGED · CHANNEL_SCHEMA_CHANGED
+     ├─ 접근 제한     → ACCESS_DENIED · RATE_LIMITED
+     └─ 경로 소멸     → INVALID_RESPONSE
+        │
+        ▼
+③ 접근 제한인가?
+     ├─ 예  → 우회하지 않습니다. 기능 중단 후 제품 범위 재검토.
+     └─ 아니오
+            │
+            ▼
+④ 픽스처 갱신 (익명화 필수)
+        │
+        ▼
+⑤ endpoints / schema / adapter 만 수정
+     수정 범위가 이 세 곳을 벗어나면 계층 격리를 함께 점검합니다.
+        │
+        ▼
+⑥ 유닛 · 통합 테스트 → 수동 계약 테스트 1회
+        │
+        ▼
+⑦ 긴급 Patch 배포 + CHANGELOG "확인된 데이터 계약" 갱신</code></pre>
+
+          <div class="summary" style="margin-top: 24px">
+            <p>
+              계약이 깨진 동안에도 확장은 <strong>잘못된 데이터를 보여주지 않고 진단 가능한 상태로
+              멈춰 있어야 합니다.</strong> 이것이 이 등록부가 지키려는 단 하나의 성질입니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="reference">
+        <div class="wrap">
+          <h2>6. 참고</h2>
+          <ul class="plain">
+            <li>실측 계약 요약: <code>CHANGELOG.md</code> 의 "확인된 데이터 계약" 절</li>
+            <li>탐색 전략과 시드 커서의 근거: <a href="./architecture.html">아키텍처</a></li>
+            <li>권한과 CSP 범위: <a href="./permissions.html">권한 설명</a></li>
+            <li>저장·보존 범위: <a href="./privacy.html">개인정보 처리방침</a></li>
+          </ul>
+
+          <p style="margin-top: 20px">
+            비공식 인터페이스에 관한 공개 참고 구현은 현재 웹 응답의 동작을 파악하기 위한 자료일
+            뿐이며, NAVER 또는 CHZZK가 호환성을 보증하는 공식 문서가 아닙니다.
+          </p>
+
+          <div class="note" style="margin-top: 24px">
+            <strong
+              >NewbieFinder는 NAVER 또는 CHZZK의 공식 서비스가 아닌 독립적인 브라우저 확장
+              프로그램입니다.</strong
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <nav>
+          <a href="./index.html">소개</a>
+          <a href="./privacy.html">개인정보 처리방침</a>
+          <a href="./permissions.html">권한 설명</a>
+          <a href="./architecture.html">아키텍처</a>
+        </nav>
+        <p>NewbieFinder v1.0.0 · MIT License · © 2026 JTech</p>
+      </div>
+    </footer>
+  </body>
+</html>

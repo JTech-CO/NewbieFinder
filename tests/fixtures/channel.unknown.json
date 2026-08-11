@@ -1,0 +1,12 @@
+{
+  "code": 200,
+  "content": {
+    "channelId": null,
+    "channelName": "(알 수 없음)",
+    "channelImageUrl": null,
+    "verifiedMark": false,
+    "channelType": "NORMAL",
+    "followerCount": 0,
+    "openLive": false
+  }
+}

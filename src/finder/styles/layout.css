@@ -1,0 +1,232 @@
+/*
+ * App Shell, Page 컨테이너, Header 골격, 결과 Grid, 반응형 Breakpoint 만 여기서 다룬다.
+ * 개별 컴포넌트 표면(색·경계·padding)은 components.css 가 담당한다.
+ */
+
+/* ---------------------------------------------------------------------- */
+/* App Shell                                                              */
+/* ---------------------------------------------------------------------- */
+
+.nf-app {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100dvh;
+  background-color: var(--color-bg);
+}
+
+/*
+ * 중앙 정렬 컨테이너. Header inner / Main / Footer inner 에 같은 규격을 적용한다.
+ * `.nf-page` 는 이 요소들과 같은 요소에 함께 붙이는 용도이며 중첩해서 쓰지 않는다.
+ */
+.nf-page,
+.nf-app__main,
+.nf-header__inner,
+.nf-footer__inner {
+  inline-size: 100%;
+  max-inline-size: var(--layout-max-width);
+  margin-inline: auto;
+  padding-inline: var(--layout-page-padding-inline);
+}
+
+.nf-app__main {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: var(--layout-sidebar-width) minmax(0, 1fr);
+  gap: var(--layout-main-gap);
+  align-items: start;
+  padding-block: var(--space-6) var(--space-8);
+}
+
+.nf-app__sidebar {
+  min-inline-size: 0;
+}
+
+.nf-app__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-inline-size: 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Header 골격                                                            */
+/* ---------------------------------------------------------------------- */
+
+.nf-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  background-color: var(--color-surface-1);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.nf-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-block-size: var(--layout-header-height);
+}
+
+.nf-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-inline-size: 0;
+  color: var(--color-text-1);
+  text-decoration: none;
+}
+
+.nf-header__brand:hover {
+  color: var(--color-text-1);
+  text-decoration: none;
+}
+
+/*
+ * 로고는 제품명 글자와 세로 크기를 맞춘다.
+ * 아이콘 원본은 가장자리에 여백이 있어서, 글자 크기(24px)가 아니라
+ * 줄 높이(32px)에 맞춰야 실제 표식이 글자와 같은 크기로 읽힌다.
+ */
+.nf-header__logo {
+  flex: none;
+  inline-size: var(--line-height-h1);
+  block-size: var(--line-height-h1);
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+}
+
+.nf-header__title {
+  font-size: var(--font-size-h1);
+  line-height: var(--line-height-h1);
+  font-weight: var(--font-weight-h1);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.nf-header__tagline {
+  min-inline-size: 0;
+  padding-inline-start: var(--space-3);
+  border-inline-start: 1px solid var(--color-border);
+  color: var(--color-text-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nf-header__status {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-badge);
+  margin-inline-start: auto;
+  color: var(--color-text-2);
+  font-size: var(--font-size-label);
+  line-height: var(--line-height-label);
+  font-weight: var(--font-weight-label);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.nf-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+}
+
+/*
+ * 결과 카드는 모두 같은 크기여야 한다.
+ * 제목·채널명·메타를 각각 고정 줄 수로 잡아 두었으므로 내용만으로도 높이가 같지만,
+ * 행 높이를 1fr 로 두고 stretch 시켜 어떤 경우에도 어긋나지 않게 한다.
+ */
+.nf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--layout-card-min-width)), 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--layout-grid-gap);
+  align-items: stretch;
+}
+
+.nf-footer {
+  margin-block-start: var(--layout-footer-gap);
+  border-block-start: 1px solid var(--color-border);
+  background-color: var(--color-surface-1);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Sticky 정책                                                            */
+/*                                                                        */
+/* Filter Panel 은 데스크톱에서만 Sticky 다. 화면이 낮아 Panel 이 뷰포트를  */
+/* 넘길 상황이면 Panel 안에 별도 Scroll 을 만들지 않고 문서 흐름으로 둔다.  */
+/* ---------------------------------------------------------------------- */
+
+@media (min-width: 1280px) and (min-height: 760px) {
+  .nf-app__sidebar {
+    position: sticky;
+    inset-block-start: var(--layout-sticky-top);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* 반응형 Breakpoint                                                      */
+/* ---------------------------------------------------------------------- */
+
+/* 900~1279px: Filter 를 상단으로 올리고 결과 Grid 는 자동 채움 유지 */
+@media (max-width: 1279px) {
+  .nf-app__main {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+    padding-block: var(--space-5) var(--space-8);
+  }
+}
+
+/* 600~899px: Header Tagline 을 감추고 상단 Filter 는 1열 */
+@media (max-width: 899px) {
+  .nf-header__tagline {
+    display: none;
+  }
+}
+
+/* < 600px: 단일 열. Sticky 를 쓰지 않고 Header 를 두 줄로 접는다. */
+@media (max-width: 599px) {
+  .nf-header {
+    position: static;
+  }
+
+  .nf-header__inner {
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+    min-block-size: auto;
+    padding-block: var(--space-3);
+  }
+
+  .nf-header__title {
+    font-size: var(--font-size-h2);
+    line-height: var(--line-height-h2);
+  }
+
+  /* 좁은 화면에서는 제품명이 작아지므로 로고도 같이 줄인다. */
+  .nf-header__logo {
+    inline-size: var(--line-height-h2);
+    block-size: var(--line-height-h2);
+  }
+
+  .nf-header__status {
+    order: 3;
+    inline-size: 100%;
+    margin-inline-start: 0;
+    white-space: normal;
+  }
+
+  .nf-header__actions {
+    margin-inline-start: auto;
+  }
+
+  .nf-app__main {
+    padding-block: var(--space-4) var(--space-6);
+  }
+
+  .nf-footer {
+    margin-block-start: var(--space-8);
+  }
+}

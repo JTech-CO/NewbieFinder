@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "NewbieFinder",
+  "version": "1.0.0",
+  "description": "치지직에서 시청자와 팔로워가 적은 현재 라이브를 조건별로 찾습니다.",
+  "minimum_chrome_version": "120",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "NewbieFinder 열기",
+    "default_state": "disabled",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["declarativeContent", "storage"],
+  "host_permissions": ["https://api.chzzk.naver.com/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; connect-src 'self' https://api.chzzk.naver.com; img-src 'self' data: https://*.pstatic.net https://*.akamaized.net; style-src 'self'; font-src 'self';"
+  }
+}
