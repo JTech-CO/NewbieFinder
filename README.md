@@ -103,7 +103,6 @@ NewbieFinder/
 - **권한 설명**: [PERMISSIONS.md](docs/reference/PERMISSIONS.md)
 - **QA 체크리스트**: [QA_CHECKLIST.md](docs/reference/QA_CHECKLIST.md)
 - **변경 이력**: [CHANGELOG.md](CHANGELOG.md)
-- **웹 스토어 등록정보**: [store/크롬 웹스토어 등록정보.txt](store/크롬%20웹스토어%20등록정보.txt)
 
 **소개 페이지 (GitHub Pages)**
 
