@@ -152,6 +152,61 @@ button:focus-visible {
   border-color: #5cffc4;
 }
 
+.cta-note {
+  margin: 14px 0 0;
+  color: var(--text-2);
+  font-size: 15px;
+}
+
+/*
+ * 히어로의 일러스트 두 장.
+ * 배경이 투명한 PNG 라서 테두리나 배경 없이 검정 위에 그대로 얹는다.
+ */
+.cast {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 32px 0 0;
+  align-items: center;
+}
+
+.cast__art {
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.cast__note {
+  margin: 8px 0 0;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+@media (max-width: 560px) {
+  .cast {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* 제품 화면 캡처 */
+.shot {
+  margin: 40px 0 0;
+}
+
+.shot img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.shot figcaption {
+  margin-top: 12px;
+  color: var(--text-3);
+  font-size: 14px;
+}
+
 /* ---------------- 본문 공통 ---------------- */
 
 section {

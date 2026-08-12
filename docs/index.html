@@ -46,11 +46,64 @@
           NewbieFinder는 시청자 수와 팔로워 수의 상한을 정해, 그 조건을 만족하는 방송만 따로 모아
           보여 줍니다. 로그인은 필요하지 않고, 별도의 서버 없이 브라우저 안에서만 동작합니다.
         </p>
+
+        <div class="cast">
+          <img
+            class="cast__art"
+            src="./assets/streamer.webp"
+            width="1040"
+            height="693"
+            alt="시청자 9명이 지켜보는 소규모 노래 방송을 보고 있는 사람"
+            decoding="async"
+          />
+          <img
+            class="cast__art"
+            src="./assets/gamer.webp"
+            width="1040"
+            height="693"
+            alt="시청자 8명 앞에서 레이싱 게임을 방송하고 있는 스트리머"
+            decoding="async"
+          />
+        </div>
+        <p class="cast__note">시청자 9명, 8명. NewbieFinder가 찾는 방송은 이런 규모입니다.</p>
+
         <div class="cta">
-          <!-- 스토어 심사가 끝나면 이 링크를 실제 등록 주소로 바꿔 주세요. -->
-          <a class="btn btn--primary" href="#install">설치 방법 보기</a>
+          <a class="btn btn--primary" href="https://github.com/JTech-CO/NewbieFinder">
+            GitHub 에서 받기
+          </a>
+          <a class="btn" href="#install">설치 방법</a>
           <a class="btn" href="./privacy.html">개인정보 처리방침</a>
         </div>
+
+        <p class="cta-note">
+          Chrome 웹 스토어 등록은 준비 중입니다. 지금은 GitHub 에서 소스를 내려받아 직접 설치할 수
+          있습니다.
+        </p>
+
+        <!--
+          웹 스토어 등록이 끝나면
+          (1) 바로 위 <p class="cta-note"> 문단을 지우고
+          (2) 아래 버튼을 .cta 의 맨 앞에 넣은 뒤
+          (3) GitHub 버튼의 class 를 "btn" 으로 낮추세요.
+
+          <a class="btn btn--primary" href="https://chromewebstore.google.com/detail/{확장ID}">
+            Chrome 웹 스토어에서 설치
+          </a>
+        -->
+
+        <figure class="shot">
+          <img
+            src="./assets/screenshot.webp"
+            width="1600"
+            height="867"
+            alt="NewbieFinder 탐색 화면. 왼쪽에 시청자 수와 팔로워 수 조건 패널이 있고, 오른쪽에 조건을 만족하는 라이브 방송이 카드 격자로 나열되어 있습니다."
+            decoding="async"
+          />
+          <figcaption>
+            시청자 9명 이하, 팔로워 10명 이하 조건으로 찾은 실제 결과입니다. 방송 제목과 채널명은
+            가렸습니다.
+          </figcaption>
+        </figure>
       </div>
 
       <section id="features">
@@ -166,14 +219,22 @@
         <div class="wrap">
           <h2>설치</h2>
           <p class="lede">
-            Chrome 웹 스토어 등록 전이라면 아래 방법으로 직접 올려 사용할 수 있습니다. Chrome 120
-            이상이 필요합니다.
+            웹 스토어 등록 전이므로 소스를 내려받아 직접 올려 사용합니다. Chrome 120 이상과 Node.js
+            20 이상이 필요합니다.
           </p>
           <ol class="steps">
             <li>
               <p>
-                <strong>소스를 내려받아 빌드합니다.</strong>
-                <code>npm ci</code> 후 <code>npm run build</code> 를 실행하면
+                <strong>소스를 내려받습니다.</strong>
+                <a href="https://github.com/JTech-CO/NewbieFinder">GitHub 저장소</a>에서
+                <code>Code → Download ZIP</code> 을 누르거나
+                <code>git clone https://github.com/JTech-CO/NewbieFinder.git</code> 을 실행합니다.
+              </p>
+            </li>
+            <li>
+              <p>
+                <strong>빌드합니다.</strong>
+                내려받은 폴더에서 <code>npm ci</code> 후 <code>npm run build</code> 를 실행하면
                 <code>dist/</code> 가 만들어집니다.
               </p>
             </li>
@@ -222,6 +283,7 @@
     <footer class="site-footer">
       <div class="wrap">
         <nav>
+          <a href="https://github.com/JTech-CO/NewbieFinder">GitHub 저장소</a>
           <a href="./privacy.html">개인정보 처리방침</a>
           <a href="./permissions.html">권한 설명</a>
           <a href="./architecture.html">아키텍처</a>
