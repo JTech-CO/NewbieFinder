@@ -13,5 +13,9 @@ Thumbs.db
 !.env.example
 tests/fixtures/*.private.json
 
-# Chrome 웹 스토어 제출 자료. 로컬에만 두고 공개 저장소에는 올리지 않는다.
-store/
+# Chrome 웹 스토어 제출 자료는 로컬에만 두되, 캡처 이미지는 저장소에 남긴다.
+#
+# `store/` 가 아니라 `store/*` 로 적어야 한다.
+# 디렉터리 자체를 제외하면 git 이 그 안으로 들어가지 않아 아래 예외가 무시된다.
+store/*
+!store/screenshots/
