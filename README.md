@@ -1,8 +1,10 @@
 # NewbieFinder
 
-> **치지직에서 지금 방송 중인 소규모 스트리머를 시청자 수와 팔로워 수 조건으로 찾아 주는 크롬 확장 프로그램**
+> **치지직에서 지금 방송 중인 소규모 스트리머를, 시청자 수와 팔로워 수 조건으로 찾아 주는 크롬 확장 프로그램**
 
-![Site Page](store/screenshots/3-site.png)
+**[Chrome 웹 스토어에서 설치하기](https://chromewebstore.google.com/detail/lnlmioalekmppmpcmaehbpfmglaaakdh)**
+
+![NewbieFinder 탐색 화면](docs/assets/screenshot.webp)
 
 ## 1. 소개 (Introduction)
 
@@ -32,6 +34,8 @@
 - **Backend**: 없음
 
 ## 3. 설치 및 실행 (Quick Start)
+
+그냥 쓰실 분은 [Chrome 웹 스토어](https://chromewebstore.google.com/detail/lnlmioalekmppmpcmaehbpfmglaaakdh)에서 바로 설치하시면 됩니다. 아래는 소스를 직접 빌드해 쓰는 방법입니다.
 
 **요구 사항**: Node.js 20 이상
 
@@ -97,6 +101,7 @@ docs/     # 공개 페이지(HTML)와 마크다운 원본(reference/)
 
 ## 5. 정보 (Info)
 
+- **Chrome 웹 스토어**: <https://chromewebstore.google.com/detail/lnlmioalekmppmpcmaehbpfmglaaakdh>
 - **License**: MIT ([LICENSE](LICENSE))
 - **Contact**: [GitHub Issues](https://github.com/jtech-co/NewbieFinder/issues)
 - **변경 이력**: [CHANGELOG.md](CHANGELOG.md)

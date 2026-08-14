@@ -40,7 +40,9 @@
 
 ## [1.0.0] - 2026-08-11
 
-최초 릴리스입니다.
+최초 릴리스입니다. Chrome 웹 스토어에는 2026-08-13 에 게시했습니다.
+
+- 스토어: <https://chromewebstore.google.com/detail/lnlmioalekmppmpcmaehbpfmglaaakdh>
 
 ### 추가됨 (Added)
 
@@ -122,5 +124,5 @@ M0 계약 검증에서 **2026-08-11 실측**으로 확인한 사실입니다. �
 
 ---
 
-[Unreleased]: https://example.invalid/newbie-finder/compare/v1.0.0...HEAD
-[1.0.0]: https://example.invalid/newbie-finder/releases/tag/v1.0.0
+[Unreleased]: https://github.com/JTech-CO/NewbieFinder/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/JTech-CO/NewbieFinder/releases/tag/v1.0.0
