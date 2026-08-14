@@ -96,7 +96,8 @@ button:focus-visible {
 /* ---------------- 히어로 ---------------- */
 
 .hero {
-  padding-block: clamp(48px, 9vw, 88px) clamp(32px, 6vw, 56px);
+  /* 위쪽은 헤더 바로 아래라 넉넉히 둘 이유가 없다. 제목이 빨리 눈에 들어와야 한다. */
+  padding-block: clamp(26px, 3.2vw, 48px) clamp(32px, 6vw, 56px);
 }
 
 .hero h1 {
